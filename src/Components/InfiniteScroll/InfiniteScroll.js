@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useState, useEffect, useRef } from "react";
 import "./InfiniteScroll.css";
 import { v4 as uuidv4 } from "uuid";
@@ -44,13 +45,31 @@ export default function InfiniteScroll() {
 
   useEffect(() => {
     infiniteFetchData();
-  }, []);
+  }, [pageIndex]);
 
   const handleSearch = (e) => {
     e.preventDefault();
   };
 
   const inpRef = useRef();
+
+  useEffect(() => {
+    window.addEventListener("scroll", infiniteCheck);
+
+    return () => {
+      window.removeEventListener("scroll", infiniteCheck);
+    };
+  }, []);
+
+  const infiniteCheck = () => {
+    console.log("hello Infinite Check");
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+
+    if (scrollHeight - scrollTop === clientHeight) {
+      console.log("BOTTOM");
+      setPageIndex((pageIndex) => pageIndex + 1);
+    }
+  };
 
   return (
     <div className="container">
@@ -61,17 +80,17 @@ export default function InfiniteScroll() {
       <div className="card-list">
         <div>
           {dataImg[0].map((img) => {
-            return <img key={uuidv4()} src={img} alt="image-unsplash-0" />;
+            return <img key={uuidv4()} src={img} alt="image-unsplash" />;
           })}
         </div>
         <div>
           {dataImg[1].map((img) => {
-            return <img key={uuidv4()} src={img} alt="image-unsplash-1" />;
+            return <img key={uuidv4()} src={img} alt="image-unsplash" />;
           })}
         </div>
         <div>
           {dataImg[2].map((img) => {
-            return <img key={uuidv4()} src={img} alt="image-unsplash-2" />;
+            return <img key={uuidv4()} src={img} alt="image-unsplash" />;
           })}
         </div>
       </div>
